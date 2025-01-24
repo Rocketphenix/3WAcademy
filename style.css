@@ -1,0 +1,47 @@
+html {
+	font-family: sans-serif;
+}
+body {
+	width: 50%;
+	max-width: 800px;
+	min-width: 480px;
+	margin: 0 auto;
+}
+
+.result {
+	color: palevioletred;
+	padding: 3px;
+}
+
+.warning {
+	position: absolute;
+	top: 135px;
+	left: 463px;
+	padding: 10px 15px;
+	width: 147px;
+	background-color: purple;
+	color: white;
+}
+
+#error {
+	animation: slideIn 1s ease-out;
+}
+/* Définition de l'animation */
+@keyframes slideIn {
+	0% {
+		transform: translateY(-15%) scaleY(0.5);
+		transform-origin: top;
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0) scaleY(1);
+		opacity: 1;
+	}
+}
+.hidden {
+	display: none;
+}
+
+.form {
+	margin-bottom: 50px;
+}

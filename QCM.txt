@@ -1,0 +1,165 @@
+Question 1
+Que signifie ECMAScript ? Réponses : 
+
+C'est un ensemble de normes
+
+-------------------------------------------------------------------------------------
+
+Question 2
+Quels sont les types primitifs en JS ? Réponses : 
+
+Object boolean null undefined number bigint string symbole
+
+-------------------------------------------------------------------------------------
+
+Question 3
+Quel est le nom de l'attribut ou méthode permettant de calculer la taille d'un Map ? Réponses :
+
+size
+
+-------------------------------------------------------------------------------------
+
+Question 4
+Qu'affiche le code suivant ?
+
+[1, 2, 3, 4, 5, 5]
+
+-------------------------------------------------------------------------------------
+
+Question 5
+Qu'affiche le code suivant ?
+
+1 1 2
+
+-------------------------------------------------------------------------------------
+
+Question 6
+Qu'affiche le code suivant ?
+
+[1,2,3]
+
+-------------------------------------------------------------------------------------
+
+Question 7
+Qu'affiche le code suivant ?
+
+ReferenceError
+
+-------------------------------------------------------------------------------------
+
+Question 8
+Qu'affiche le code suivant ?
+
+10 11
+
+-------------------------------------------------------------------------------------
+
+Question 9
+Qu'affiche le code suivant ?
+
+[111,120, 7]
+
+-------------------------------------------------------------------------------------
+
+Question 10
+Que vaut le tableau t1 ?
+
+[1, 2]
+
+-------------------------------------------------------------------------------------
+
+Question 11
+Que vaut le tableau t1 ?
+
+[1, 2]
+
+-------------------------------------------------------------------------------------
+
+Question 12
+Qu'affiche le code suivant ?
+
+["7", "7", "7"]
+
+-------------------------------------------------------------------------------------
+
+Question 13
+Qu'affiche le code suivant ?
+
+["0", "e", "7", "7", "d", "7"]
+
+-------------------------------------------------------------------------------------
+
+Question 14
+Comment récupérer le name et le nom de la soeur en utilisant de la desctructuration ?
+
+const { name, family : { sister }} = st;
+
+-------------------------------------------------------------------------------------
+
+Question 15
+Qu'affiche le code suivant ?
+
+ReferenceError
+
+-------------------------------------------------------------------------------------
+
+Question 16
+Qu'affiche le code suivant ?
+
+posts
+
+-------------------------------------------------------------------------------------
+
+Question 17
+Qu'affiche le code suivant ?
+
+{name : "Alan", age : 45}
+
+-------------------------------------------------------------------------------------
+
+Question 18
+Qu'affiche le code suivant ?
+
+-> A
+
+-------------------------------------------------------------------------------------
+
+Question 19
+Qu'affiche le code suivant ?
+
+[1, 2]
+
+-------------------------------------------------------------------------------------
+
+Question 20
+Comment définissez-vous Javascript ? Réponses :
+
+Javascript est synchrone mono-thread
+
+-------------------------------------------------------------------------------------
+
+Question 21
+Qu'affiche le code suivant ?
+
+1 2 3
+
+-------------------------------------------------------------------------------------
+
+Question 22
+Combien d'export par défaut peut-on faire dans un fichier ? Réponses :
+
+1
+
+-------------------------------------------------------------------------------------
+
+Question 23
+Comment pouvez-vous renommer l'import suivant ?
+
+import {Model as m} from 'toolkit';
+
+-------------------------------------------------------------------------------------
+
+Question 24
+Que fait la commande suivante ?
+
+ré-exporter (délégation) à partir d'un autre module
