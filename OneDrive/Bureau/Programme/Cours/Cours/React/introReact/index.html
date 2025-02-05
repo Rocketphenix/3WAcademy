@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/babel-standalone@latest/babel.min.js"></script>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>No Npm</title>
+	</head>
+	<body>
+		<div id="root"></div>
+
+		<script type="text/babel">
+			const Home = () => {
+				return (
+					<div>
+						<h1>hi</h1>
+						<NumberP3 />
+					</div>
+				);
+			};
+
+			const NumberP3 = () => {
+				const numbers = ["4", "3", "7"];
+
+				return (
+					<div>
+						{numbers.map((number, i) => {
+							return <p key={i}>{number}</p>;
+						})}
+					</div>
+				);
+			};
+
+			ReactDOM.createRoot(document.querySelector("#root")).render(<Home />);
+		</script>
+	</body>
+</html>
