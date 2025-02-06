@@ -3,15 +3,19 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 //import { CalculateProvider } from "./context/CalculateContext";
-import { QuizzProvider } from "./context/QuizzContext";
+//import { QuizzProvider } from "./context/QuizzContext";
+import { CartProvider } from "./context/CartContext";
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
 		{/* <CalculateProvider>
 			<App />
 		</CalculateProvider> */}
-		<QuizzProvider>
+		{/* <QuizzProvider>
 			<App />
-		</QuizzProvider>
+		</QuizzProvider> */}
+		<CartProvider>
+			<App />
+		</CartProvider>
 	</StrictMode>
 );
