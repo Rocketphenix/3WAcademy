@@ -9,7 +9,8 @@ import "./App.css";
 // import AlertBtn from "./component/Exo/AlertBtn";
 // import Calculatrice from "./component/Calculatrice/Calculatrice";
 // import Quizz from "./component/Quizz/Quizz";
-import Shop from "./component/CompShop/Shop";
+// import Shop from "./component/CompShop/Shop";
+import Morpion from "./component/Morpion/Morpion.jsx";
 
 function App() {
 	// const MESSAGES = [
@@ -37,12 +38,13 @@ function App() {
 	//		<AlertBtn />
 	//		<Calculatrice />
 	//		<Quizz />
+	//		<Shop />
 	// 	</>
 	// );
 
 	return (
 		<>
-			<Shop />
+			<Morpion />
 		</>
 	);
 }

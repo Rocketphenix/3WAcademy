@@ -1,0 +1,47 @@
+.gameBoard {
+	border: 1px solid brown;
+	display: grid;
+	grid-template-rows: repeat(3, 1fr);
+	padding: 0;
+}
+
+.gameBoard div {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.gameBoard div div {
+	background-color: grey;
+	padding: 50px 70px;
+	border: 1px solid black;
+
+	display: flex;
+	font-size: 1.5rem; /* Ajuste la taille du texte si nécessaire */
+	font-weight: bold;
+}
+
+.historic {
+	padding: 0 25px;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: grey;
+	color: black;
+	overflow-y: auto;
+}
+
+.game {
+	margin-bottom: 15px;
+	padding: 10px;
+	border-bottom: 1px solid white;
+}
+
+.game h3 {
+	margin-bottom: 5px;
+	color: #333;
+}
+
+.game div {
+	padding: 5px 0;
+}

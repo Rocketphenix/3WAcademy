@@ -4,7 +4,8 @@ import "./index.css";
 import App from "./App.jsx";
 //import { CalculateProvider } from "./context/CalculateContext";
 //import { QuizzProvider } from "./context/QuizzContext";
-import { CartProvider } from "./context/CartContext";
+//import { CartProvider } from "./context/CartContext";
+import { MorpionProvider } from "./context/MorpionContext";
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
@@ -14,8 +15,11 @@ createRoot(document.getElementById("root")).render(
 		{/* <QuizzProvider>
 			<App />
 		</QuizzProvider> */}
-		<CartProvider>
+		{/* <CartProvider>
 			<App />
-		</CartProvider>
+		</CartProvider> */}
+		<MorpionProvider>
+			<App />
+		</MorpionProvider>
 	</StrictMode>
 );
