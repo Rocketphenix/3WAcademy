@@ -1,0 +1,21 @@
+.postForm {
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+	margin: 50px auto;
+
+	input {
+		padding: 5px;
+	}
+
+	button {
+		width: 100px;
+		margin: 10px auto;
+	}
+}
+
+.error {
+	color: rgb(170, 7, 7);
+	font-weight: bold;
+	font-size: 1.2em;
+}

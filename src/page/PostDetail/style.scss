@@ -1,0 +1,15 @@
+.commentForm {
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+	margin: 50px auto;
+
+	input {
+		padding: 5px;
+	}
+
+	button {
+		width: 100px;
+		margin: 10px auto;
+	}
+}
