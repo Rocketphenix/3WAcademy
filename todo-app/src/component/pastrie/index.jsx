@@ -3,12 +3,12 @@ import "./style.scss";
 
 const Pastrie = ({ pastrie }) => {
 	return (
-		<>
-			<img src={pastrie.image} alt="img" />
+		<div className="card">
+			<img src="https://picsum.photos/200" alt={pastrie.image} />
 			<p>
 				{pastrie.name} {pastrie.quantity} {pastrie.quantityWon}
 			</p>
-		</>
+		</div>
 	);
 };
 

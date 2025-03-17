@@ -6,7 +6,7 @@ import {
 } from "../../store/slice/apiSlice.js"; // Import de l'API pour mettre à jour les pâtisseries
 
 const JouerPage = () => {
-	const { data: pastries, refetch } = useGetPastriesQuery();
+	const { data: pastries } = useGetPastriesQuery();
 	const [updatePastries] = useUpdatePastriesMutation(); // Hook pour la mutation (mise à jour des pâtisseries)
 
 	const [isDisabled, setIsDisabled] = useState(false);
@@ -41,7 +41,7 @@ const JouerPage = () => {
 	};
 
 	// Fonction pour lancer les dés
-	const throwDice = () => {
+	const throwDice = async () => {
 		const dice = document.querySelector(".zoneDice");
 		dice.innerHTML = ""; // Réinitialiser la zone des dés
 
@@ -60,43 +60,38 @@ const JouerPage = () => {
 
 		// Vérification des combinaisons après avoir généré les dés et mise à jour du message
 		let newNbrPastries = checkCombination(result);
-
 		setNbrLancer(nbrLancer - 1);
+
 		if (nbrLancer === 1) {
 			setIsDisabled(true);
+			const resultMsg = document.getElementById("resultMsg");
+			resultMsg.innerHTML = "";
+
 			if (newNbrPastries > 0) {
-				// Créer un objet pour compter les occurrences de chaque pâtisserie
-				const pastryCounts = {};
+				try {
+					const response = await updatePastries(newNbrPastries).unwrap(); // Attendre la mise à jour
+					console.log("Pâtisseries mises à jour :", response);
 
-				// Ajouter les pâtisseries choisies au tableau
-				for (let i = 0; i < newNbrPastries; i++) {
-					const nbr = Math.floor(Math.random() * pastries.length);
-					const chosenPastry = pastries[nbr].name;
+					// Si la réponse contient les pâtisseries gagnées
+					if (response && response.length > 0) {
+						resultMsg.innerText = "Vous avez gagné : ";
 
-					// Compter les occurrences de chaque pâtisserie
-					if (pastryCounts[chosenPastry]) {
-						pastryCounts[chosenPastry] += 1;
+						response.forEach((p) => {
+							const newLi = document.createElement("li"); // Créer un élément <li>
+							newLi.innerText = `${p.name}`; // Ajouter le nom de la pâtisserie
+							resultMsg.appendChild(newLi); // L'ajouter à la liste
+						});
+						resultMsg.innerText += " !";
 					} else {
-						pastryCounts[chosenPastry] = 1;
+						resultMsg.innerText = `Vous avez gagné ${newNbrPastries} pâtisseries !`;
 					}
-
-					// Mise à jour des pâtisseries dans la base via l'API
-					updatePastries(1);
+				} catch (error) {
+					console.error("Erreur de mise à jour :", error);
+					resultMsg.innerText =
+						"Une erreur est survenue lors de la mise à jour.";
 				}
-
-				// Créer un message avec les pâtisseries et leur quantité
-				let pastryMessage = "Vous avez gagné ";
-				const pastryEntries = Object.entries(pastryCounts);
-
-				// Générer le message avec la quantité pour chaque pâtisserie
-				pastryMessage += pastryEntries
-					.map(([name, count]) => `${count} ${name}`)
-					.join(", ");
-				pastryMessage += ".";
-
-				setResultMessage(pastryMessage);
 			} else {
-				setResultMessage("Aucune combinaison gagnante. Essayez encore !");
+				resultMsg.innerText = "Aucune combinaison gagnante. Essayez encore !";
 			}
 		}
 
@@ -125,7 +120,7 @@ const JouerPage = () => {
 			</div>
 
 			{/* Affichage du message de résultat */}
-			<span>{resultMessage}</span>
+			<div id="resultMsg"></div>
 
 			<button onClick={throwDice} disabled={isDisabled}>
 				{isDisabled

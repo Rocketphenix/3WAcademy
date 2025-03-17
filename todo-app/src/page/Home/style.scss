@@ -1,0 +1,9 @@
+.lotsPlastries {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+
+	div {
+		width: 25%;
+	}
+}

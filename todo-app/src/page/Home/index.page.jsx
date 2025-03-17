@@ -23,7 +23,7 @@ const HomePage = () => {
 	if (isError) content = <div>Erreur: {error.error}</div>;
 	if (isSuccess) {
 		content = (
-			<div>
+			<div className="lotsPlastries">
 				{pastries.map((pastrie) => (
 					<Pastrie key={pastrie.id} pastrie={pastrie} />
 				))}
