@@ -1,18 +1,13 @@
 import "./style.scss";
 import { useState } from "react";
-import {
-	useGetPastriesQuery,
-	useUpdatePastriesMutation,
-} from "../../store/slice/apiSlice.js"; // Import de l'API pour mettre à jour les pâtisseries
+import { useUpdatePastriesMutation } from "../../store/slice/apiSlice.js";
 
 const JouerPage = () => {
-	const { data: pastries } = useGetPastriesQuery();
 	const [updatePastries] = useUpdatePastriesMutation(); // Hook pour la mutation (mise à jour des pâtisseries)
 
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [nbrLancer, setNbrLancer] = useState(3);
-	const [resultMessage, setResultMessage] = useState(""); // Message de résultat
-	const [nbrPastries, setNbrPastries] = useState(0); // Nombre de pâtisseries gagnées
+	const [nbrPastries, setNbrPastries] = useState(0);
 
 	// Fonction pour vérifier s'il y a des combinaisons d'un certain nombre
 	const checkCombination = (result) => {
@@ -43,7 +38,7 @@ const JouerPage = () => {
 	// Fonction pour lancer les dés
 	const throwDice = async () => {
 		const dice = document.querySelector(".zoneDice");
-		dice.innerHTML = ""; // Réinitialiser la zone des dés
+		dice.innerHTML = "";
 
 		let result = [];
 
@@ -66,30 +61,34 @@ const JouerPage = () => {
 			setIsDisabled(true);
 			const resultMsg = document.getElementById("resultMsg");
 			resultMsg.innerHTML = "";
+			resultMsg.classList.remove("win");
 
 			if (newNbrPastries > 0) {
-				try {
-					const response = await updatePastries(newNbrPastries).unwrap(); // Attendre la mise à jour
-					console.log("Pâtisseries mises à jour :", response);
+				updatePastries(newNbrPastries)
+					.then((response) => {
+						// Si la réponse contient les pâtisseries gagnées
+						if (response.data && response.data.length > 0) {
+							resultMsg.classList.add("win");
+							const newP = document.createElement("p");
+							newP.innerText = "Bravo, Vous avez gagné : ";
+							resultMsg.appendChild(newP);
 
-					// Si la réponse contient les pâtisseries gagnées
-					if (response && response.length > 0) {
-						resultMsg.innerText = "Vous avez gagné : ";
-
-						response.forEach((p) => {
-							const newLi = document.createElement("li"); // Créer un élément <li>
-							newLi.innerText = `${p.name}`; // Ajouter le nom de la pâtisserie
-							resultMsg.appendChild(newLi); // L'ajouter à la liste
-						});
-						resultMsg.innerText += " !";
-					} else {
-						resultMsg.innerText = `Vous avez gagné ${newNbrPastries} pâtisseries !`;
-					}
-				} catch (error) {
-					console.error("Erreur de mise à jour :", error);
-					resultMsg.innerText =
-						"Une erreur est survenue lors de la mise à jour.";
-				}
+							const newUl = document.createElement("ul");
+							response.data.forEach((p) => {
+								const newLi = document.createElement("li");
+								newLi.innerText = `${p.name}`; // Ajouter le nom de la pâtisserie
+								newUl.appendChild(newLi);
+							});
+							resultMsg.appendChild(newUl);
+						} else {
+							resultMsg.innerText = `Vous avez gagné ${newNbrPastries} pâtisseries !`;
+						}
+					})
+					.catch((error) => {
+						console.error("Erreur de mise à jour :", error);
+						resultMsg.innerText =
+							"Une erreur est survenue lors de la mise à jour.";
+					});
 			} else {
 				resultMsg.innerText = "Aucune combinaison gagnante. Essayez encore !";
 			}
@@ -99,7 +98,7 @@ const JouerPage = () => {
 	};
 
 	return (
-		<div className="page" id="Login">
+		<div className="page" id="Jouer">
 			<h2>Jeu du yams</h2>
 			<p>
 				Vous avez 3 lancés. <br />
@@ -119,7 +118,6 @@ const JouerPage = () => {
 				<img src={`/dice/dice0.png`} alt="?" />
 			</div>
 
-			{/* Affichage du message de résultat */}
 			<div id="resultMsg"></div>
 
 			<button onClick={throwDice} disabled={isDisabled}>

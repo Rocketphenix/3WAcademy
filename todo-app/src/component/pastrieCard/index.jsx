@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import "./style.scss";
 
-const Pastrie = ({ pastrie }) => {
+const PastrieCard = ({ pastrie }) => {
 	return (
 		<div className="card">
 			<img src="https://picsum.photos/200" alt={pastrie.image} />
@@ -12,4 +12,4 @@ const Pastrie = ({ pastrie }) => {
 	);
 };
 
-export default Pastrie;
+export default PastrieCard;

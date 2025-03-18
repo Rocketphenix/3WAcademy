@@ -1,24 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const apiSlice = createApi({
-	reducerPath: "pastrie",
-	tagTypes: ["Pastries"],
+export const userSlice = createApi({
+	reducerPath: "user",
+	tagTypes: ["Users"],
 	baseQuery: fetchBaseQuery({
-		baseUrl: "http://localhost:3001/game/", // Point de base pour les requêtes
+		baseUrl: "http://localhost:3001/", // Point de base pour les requêtes
 	}),
 	endpoints: (build) => {
 		return {
 			// Requête pour obtenir toutes les pâtisseries
-			getPastries: build.query({
-				query: () => "/pastries",
-				providesTags: ["Pastries"], // Pour invalider l'état des pâtisseries après une mise à jour
+			login: build.mutation({
+				query: (data) => ({
+					url: "/login",
+					method: "POST",
+					body: data,
+					credentials: "include",
+				}),
 			}),
-			// Mutation pour mettre à jour les pâtisseries
-			updatePastries: build.mutation({
-				query: (quantityWon) => ({
-					url: `/win-pastries/${quantityWon}`, // Remplacez cette URL par celle appropriée de votre API
+			checkLogin: build.query({
+				query: () => ({
+					url: "/me",
 					method: "GET",
+					credentials: "include", // Assure-toi d'avoir cette ligne ici
 				}),
 			}),
 			modifPastries: build.mutation({
@@ -35,8 +39,4 @@ export const apiSlice = createApi({
 	},
 });
 
-export const {
-	useGetPastriesQuery,
-	useUpdatePastriesMutation,
-	useModifPastriesMutation,
-} = apiSlice;
+export const { useLoginMutation, useCheckLoginQuery } = userSlice;
