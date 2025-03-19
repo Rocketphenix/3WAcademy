@@ -4,6 +4,21 @@
 		display: flex;
 		gap: 15px;
 		justify-content: center;
+		align-items: center;
 		padding: 0;
+	}
+
+	button {
+		font-weight: 500;
+		background-color: #294666;
+		padding: 10px 15px;
+		color: white;
+		text-decoration: inherit;
+		border-radius: 0;
+		border: none;
+
+		&:hover {
+			background-color: #535bf2;
+		}
 	}
 }

@@ -25,18 +25,49 @@ export const userSlice = createApi({
 					credentials: "include", // Assure-toi d'avoir cette ligne ici
 				}),
 			}),
-			modifPastries: build.mutation({
+			logout: build.mutation({
+				query: () => ({
+					url: "/logout",
+					method: "GET",
+					credentials: "include", // Assure-toi d'avoir cette ligne ici
+				}),
+			}),
+			modifPastrie: build.mutation({
 				query: ({ id, ...data }) => ({
-					url: `/pastrie/${id}`, // ✅ Utilisation correcte de l'ID
+					url: `/api/pastrie/${id}`, // ✅ Utilisation correcte de l'ID
 					method: "PUT",
 					body: data, // ✅ Envoie des autres données dans le corps de la requête
 					headers: {
 						"Content-Type": "application/json", // ✅ Spécifier le format JSON
 					},
+					credentials: "include", // Assure-toi d'avoir cette ligne ici
+				}),
+			}),
+			deletePastrie: build.mutation({
+				query: ({ id }) => ({
+					url: `/api/pastrie/${id}`,
+					method: "DELETE",
+					credentials: "include", // Assure-toi d'avoir cette ligne ici
+				}),
+			}),
+			addPastrie: build.mutation({
+				query: (data) => ({
+					// ✅ Supprimer la destructuration { data }
+					url: "/api/pastrie",
+					method: "POST",
+					body: data,
+					credentials: "include",
 				}),
 			}),
 		};
 	},
 });
 
-export const { useLoginMutation, useCheckLoginQuery } = userSlice;
+export const {
+	useLoginMutation,
+	useCheckLoginQuery,
+	useModifPastrieMutation,
+	useDeletePastrieMutation,
+	useAddPastrieMutation,
+	useLogoutMutation,
+} = userSlice;

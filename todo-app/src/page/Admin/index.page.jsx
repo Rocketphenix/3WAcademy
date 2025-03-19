@@ -1,37 +1,58 @@
 import "./style.scss";
 import { useGetPastriesQuery } from "../../store/slice/apiSlice.js";
+import { useCheckLoginQuery } from "../../store/slice/userSlice.js"; // Vérifier la connexion
 import PastrieList from "../../component/pastrieList/index.jsx";
 import StyledLink from "../../component/StyledLink/index.jsx";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AdminPage = () => {
+	const navigate = useNavigate();
+
+	// Vérification de la connexion utilisateur
+	const { isError } = useCheckLoginQuery();
+
+	// Récupération des pâtisseries
 	const {
 		data: pastries,
 		isLoading,
 		isSuccess,
-		isError,
-		error,
 		refetch,
 	} = useGetPastriesQuery();
 
+	// Rediriger si l'utilisateur n'est pas connecté
 	useEffect(() => {
-		refetch(); // Recharger les pâtisseries après la mise à jour
+		if (isError) {
+			navigate("/"); // Redirige vers l'accueil si déconnecté
+		}
+	}, [isError, navigate]);
+
+	// Recharger les pâtisseries après la mise à jour
+	useEffect(() => {
+		refetch();
 	}, [refetch]);
 
 	let content;
 	if (isLoading) content = <div>Chargement...</div>;
-	if (isError) content = <div>Erreur: {error.error}</div>;
 	if (isSuccess) {
 		content = (
 			<div className="listPastries">
-				<div className="card">
-					<p>Image</p>
-					<p>Nom</p>
-					<p>Quantités restantes</p>
-					<p>Actions</p>
+				<div className="card title">
+					<div>
+						<p>Image</p>
+					</div>
+					<div>
+						<p>Nom</p>
+					</div>
+					<div>
+						<p>Quantités restantes</p>
+					</div>
+					<div>
+						<p>Actions</p>
+					</div>
 				</div>
 				{pastries.map((pastrie) => (
-					<PastrieList key={pastrie.id} pastrie={pastrie} />
+					<PastrieList key={pastrie.id} pastrie={pastrie} refetch={refetch} />
 				))}
 			</div>
 		);
@@ -40,8 +61,8 @@ const AdminPage = () => {
 	return (
 		<div className="page" id="Admin">
 			<h2>Administration</h2>
-			<h3>Liste des patisseries</h3>
-			<StyledLink to={"/newPastrie"}>Ajouter une pâtisserie</StyledLink>
+			<h3>Liste des pâtisseries</h3>
+			<StyledLink to="/newPastrie">Ajouter une pâtisserie</StyledLink>
 			{content}
 		</div>
 	);

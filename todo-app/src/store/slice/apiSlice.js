@@ -21,22 +21,8 @@ export const apiSlice = createApi({
 					method: "GET",
 				}),
 			}),
-			modifPastries: build.mutation({
-				query: ({ id, ...data }) => ({
-					url: `/pastrie/${id}`, // ✅ Utilisation correcte de l'ID
-					method: "PUT",
-					body: data, // ✅ Envoie des autres données dans le corps de la requête
-					headers: {
-						"Content-Type": "application/json", // ✅ Spécifier le format JSON
-					},
-				}),
-			}),
 		};
 	},
 });
 
-export const {
-	useGetPastriesQuery,
-	useUpdatePastriesMutation,
-	useModifPastriesMutation,
-} = apiSlice;
+export const { useGetPastriesQuery, useUpdatePastriesMutation } = apiSlice;

@@ -5,6 +5,7 @@ import HomePage from "./page/Home/index.page.jsx";
 import LoginPage from "./page/Login/index.page.jsx";
 import JouerPage from "./page/Jouer/index.page.jsx";
 import AdminPage from "./page/Admin/index.page.jsx";
+import NewPastriePage from "./page/newPastrie/index.page.jsx";
 import Footer from "./component/Footer/index.jsx";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
 				<Route path="/login" element={<LoginPage />} />
 				<Route path="/jouer" element={<JouerPage />} />
 				<Route path="/admin" element={<AdminPage />} />
+				<Route path="/newPastrie" element={<NewPastriePage />} />
 
 				<Route path="*" element={<HomePage />} />
 			</Routes>

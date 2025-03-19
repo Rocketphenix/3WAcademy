@@ -1,4 +1,4 @@
-.form {
+form {
 	display: flex;
 	flex-direction: column;
 	text-align: left;
@@ -6,7 +6,6 @@
 	label {
 		font-size: 20px;
 	}
-
 	input {
 		margin-bottom: 40px;
 		padding: 10px 15px;
@@ -17,14 +16,19 @@
 		}
 	}
 
-	div button {
-		background-color: #3498db;
-		padding: 10px;
-		border-radius: 0;
-		align-self: start; // Empêche le bouton de prendre toute la largeur
+	.buttons {
+		display: flex;
+		justify-content: space-between;
 
-		&:hover {
+		button {
 			background-color: #256d9c;
+			padding: 10px 15px;
+			border-radius: 0;
+			border: none;
+
+			&:hover {
+				background-color: #3498db;
+			}
 		}
 	}
 }

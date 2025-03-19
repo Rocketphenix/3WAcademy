@@ -1,40 +1,61 @@
 import "./style.scss";
 import StyledLink from "../StyledLink/index.jsx";
-import { useCheckLoginQuery } from "../../store/slice/userSlice.js";
+import {
+	useCheckLoginQuery,
+	useLogoutMutation,
+} from "../../store/slice/userSlice.js";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
-	// Appel de l'API pour vérifier si l'utilisateur est connecté
-	const { data: logs, isSuccess, isError, error } = useCheckLoginQuery();
+	const navigate = useNavigate();
 
-	let content;
-	if (isSuccess) {
-		// Si l'utilisateur est connecté, on peut afficher son nom ou autre info
-		content = <div className="user-info"></div>;
-	}
+	// Vérifier si l'utilisateur est connecté
+	const { data: logs, isSuccess, refetch } = useCheckLoginQuery();
+
+	// Mutation pour la déconnexion
+	const [logoutUser, { isSuccess: logoutSuccess }] = useLogoutMutation();
+
+	// Gestion du logout
+	const handleLogout = async () => {
+		await logoutUser();
+		refetch();
+		navigate("/"); // Redirige vers la page de connexion
+	};
+
+	// Effet pour actualiser l’état après la déconnexion
+	useEffect(() => {
+		if (logoutSuccess) {
+			refetch();
+		}
+	}, [logoutSuccess, refetch]);
 
 	return (
 		<nav className="Nav">
 			<h1>La pâtisserie 3WA</h1>
 			<ul>
 				<li>
-					<StyledLink to={"/"}>Accueil</StyledLink>
+					<StyledLink to="/">Accueil</StyledLink>
 				</li>
-				{isSuccess && ( // Si l'utilisateur est connecté, on affiche ces liens
+
+				{isSuccess ? (
+					// Si connecté, affichage des liens Admin + Logout
 					<>
 						<li>
-							<StyledLink to={"/admin"}>Admin</StyledLink>
+							<StyledLink to="/admin">Admin</StyledLink>
 						</li>
 						<li>
-							<StyledLink to={"/logout"}>Logout</StyledLink>
+							<button onClick={handleLogout} className="logout-btn">
+								Logout
+							</button>
 						</li>
 					</>
-				)}
-				{!isSuccess && ( // Si l'utilisateur n'est pas connecté, afficher ce lien
+				) : (
+					// Si non connecté, affichage du lien Login
 					<li>
-						<StyledLink to={"/login"}>Login</StyledLink>
+						<StyledLink to="/login">Login</StyledLink>
 					</li>
 				)}
-				{content}
 			</ul>
 		</nav>
 	);
