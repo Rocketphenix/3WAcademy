@@ -11,13 +11,18 @@
 			height: 200px;
 			object-fit: cover;
 			border-radius: 30px;
+			border: 5px solid rgb(255, 187, 0);
+
+			&.selected {
+				border: 5px solid red;
+			}
 		}
 	}
 
 	#resultMsg {
 		margin: 20px 0;
 		&.win {
-			color: green;
+			color: rgb(13, 179, 13);
 
 			ul {
 				padding: 0;

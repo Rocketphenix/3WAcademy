@@ -6,7 +6,7 @@ import {
 	useDeletePastrieMutation,
 } from "../../store/slice/userSlice";
 
-const PastrieList = ({ pastrie, refetch }) => {
+const PastrieList = ({ pastrie, refetch, filter }) => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [formData, setFormData] = useState({
 		name: pastrie.name,
@@ -45,50 +45,52 @@ const PastrieList = ({ pastrie, refetch }) => {
 	};
 
 	return (
-		<div className="card">
-			<div>
-				<img src="https://picsum.photos/200" alt={pastrie.image} />
-			</div>
+		pastrie.name.toLowerCase().includes(filter) && (
+			<div className="card">
+				<div>
+					<img src="https://picsum.photos/200" alt={pastrie.image} />
+				</div>
 
-			<div>
-				{isEditing ? (
-					<input
-						type="text"
-						name="name"
-						value={formData.name}
-						onChange={handleChange}
-					/>
-				) : (
-					<p>{pastrie.name}</p>
-				)}
-			</div>
+				<div>
+					{isEditing ? (
+						<input
+							type="text"
+							name="name"
+							value={formData.name}
+							onChange={handleChange}
+						/>
+					) : (
+						<p>{pastrie.name}</p>
+					)}
+				</div>
 
-			<div>
-				{isEditing ? (
-					<input
-						type="number"
-						name="quantity"
-						value={formData.quantity}
-						onChange={handleChange}
-					/>
-				) : (
-					<p>{pastrie.quantity}</p>
-				)}
-			</div>
+				<div>
+					{isEditing ? (
+						<input
+							type="number"
+							name="quantity"
+							value={formData.quantity}
+							onChange={handleChange}
+						/>
+					) : (
+						<p>{pastrie.quantity}</p>
+					)}
+				</div>
 
-			<div className="buttons">
-				{isEditing ? (
-					<button onClick={handleSave} disabled={isLoading}>
-						{isLoading ? "Enregistrement..." : "Valider"}
-					</button>
-				) : (
-					<button onClick={() => setIsEditing(true)}>Modifier</button>
-				)}
-				<button onClick={deleting}>Supprimer</button>
-			</div>
+				<div className="buttons">
+					{isEditing ? (
+						<button onClick={handleSave} disabled={isLoading}>
+							{isLoading ? "Enregistrement..." : "Valider"}
+						</button>
+					) : (
+						<button onClick={() => setIsEditing(true)}>Modifier</button>
+					)}
+					<button onClick={deleting}>Supprimer</button>
+				</div>
 
-			{error && <p className="error">Erreur : {error.data?.message}</p>}
-		</div>
+				{error && <p className="error">Erreur : {error.data?.message}</p>}
+			</div>
+		)
 	);
 };
 

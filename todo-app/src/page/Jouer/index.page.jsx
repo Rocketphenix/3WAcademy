@@ -1,101 +1,169 @@
 import "./style.scss";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useUpdatePastriesMutation } from "../../store/slice/apiSlice.js";
 
 const JouerPage = () => {
-	const [updatePastries] = useUpdatePastriesMutation(); // Hook pour la mutation (mise à jour des pâtisseries)
-
+	const [updatePastries] = useUpdatePastriesMutation();
 	const [isDisabled, setIsDisabled] = useState(false);
 	const [nbrLancer, setNbrLancer] = useState(3);
 	const [nbrPastries, setNbrPastries] = useState(0);
+	const [resultMsg, setResultMsg] = useState("");
+	const zoneDiceRef = useRef(null);
 
-	// Fonction pour vérifier s'il y a des combinaisons d'un certain nombre
+	// Vérifie les combinaisons et met à jour les pâtisseries
 	const checkCombination = (result) => {
-		// Compter les occurrences de chaque valeur de dé
+		// let suite = [];
+
 		const count = result.reduce((acc, num) => {
 			acc[num] = (acc[num] || 0) + 1;
 			return acc;
 		}, {});
 
-		// Vérification des combinaisons possibles
-		const frequencies = Object.values(count);
-		const pairs = frequencies.filter((f) => f === 2).length;
-		const threes = frequencies.filter((f) => f === 3).length;
-		const fours = frequencies.filter((f) => f === 4).length;
-
-		// Retourner le nombre de pâtisseries gagnées en fonction de la combinaison
-		if (fours > 0) {
-			return nbrPastries + 3;
-		} else if (threes > 0) {
-			return nbrPastries + 2;
-		} else if (pairs > 0) {
-			return nbrPastries + 1;
-		} else {
-			return nbrPastries; // Aucune combinaison gagnante
+		let suite = 0;
+		if (
+			(Object.keys(count)[0] == 1 &&
+				Object.keys(count)[1] == 2 &&
+				Object.keys(count)[2] == 3 &&
+				Object.keys(count)[3] == 4 &&
+				Object.keys(count)[4] == 5) ||
+			(Object.keys(count)[0] == 2 &&
+				Object.keys(count)[1] == 3 &&
+				Object.keys(count)[2] == 4 &&
+				Object.keys(count)[3] == 5 &&
+				Object.keys(count)[4] == 6)
+		) {
+			suite = 1;
 		}
+
+		const frequencies = Object.values(count);
+		const paire = frequencies.filter((f) => f === 2).length;
+		const brelan = frequencies.filter((f) => f === 3).length;
+		const carre = frequencies.filter((f) => f === 4).length;
+		const yams = frequencies.filter((f) => f === 5).length;
+
+		let newNbrPastries =
+			yams > 0
+				? 3
+				: brelan > 0 && paire > 0
+				? 2
+				: carre > 0
+				? 2
+				: suite > 0
+				? 2
+				: paire > 1
+				? 1
+				: brelan > 0
+				? 1
+				: 0;
+		setNbrPastries(newNbrPastries);
+		setIsDisabled(true);
+
+		const resultMsgElement = document.getElementById("resultMsg");
+		resultMsgElement.classList.remove("win");
+
+		if (newNbrPastries > 0) {
+			updatePastries(newNbrPastries)
+				.then((response) => {
+					if (response.data?.length) {
+						setResultMsg(
+							<>
+								<p>Bravo, Vous avez gagné :</p>
+								<ul>
+									{response.data.map((p, index) => (
+										<li key={index}>{p.name}</li>
+									))}
+								</ul>
+							</>
+						);
+						resultMsgElement.classList.add("win");
+					} else {
+						setResultMsg(`Vous avez gagné ${newNbrPastries} pâtisseries !`);
+						resultMsgElement.classList.add("win");
+					}
+				})
+				.catch(() => {
+					setResultMsg("Une erreur est survenue lors de la mise à jour.");
+				});
+		} else {
+			setResultMsg("Aucune combinaison gagnante. Essayez encore !");
+		}
+
+		localStorage.setItem("played", true);
 	};
 
-	// Fonction pour lancer les dés
-	const throwDice = async () => {
-		const dice = document.querySelector(".zoneDice");
-		dice.innerHTML = "";
+	// Permet de sélectionner/désélectionner un dé
+	const keepDie = (nbrDie) => {
+		const dices = zoneDiceRef.current.querySelectorAll("img");
+		dices[nbrDie].classList.toggle("selected");
+	};
 
+	// Lance les dés (en gardant les sélectionnés)
+	const throwDice = () => {
+		if (!zoneDiceRef.current) return;
+		const dices = zoneDiceRef.current;
+		const diceKept = dices.querySelectorAll(".selected");
+
+		dices.innerHTML = "";
 		let result = [];
 
-		// Générer les 5 dés aléatoires et les afficher
 		for (let i = 0; i < 5; i++) {
-			const nbr = Math.floor(Math.random() * 6) + 1;
-			result.push(nbr);
+			const dieLabel = `Dé n°${i + 1}`;
+			const keptDie = Array.from(diceKept).find((die) => die.alt === dieLabel);
 
-			const img = document.createElement("img");
-			img.src = `/dice/dice${nbr}.png`; // Récupère l'image correspondant au dé
-			img.alt = `Dé n°${i + 1}`;
-			dice.appendChild(img);
-		}
-
-		// Vérification des combinaisons après avoir généré les dés et mise à jour du message
-		let newNbrPastries = checkCombination(result);
-		setNbrLancer(nbrLancer - 1);
-
-		if (nbrLancer === 1) {
-			setIsDisabled(true);
-			const resultMsg = document.getElementById("resultMsg");
-			resultMsg.innerHTML = "";
-			resultMsg.classList.remove("win");
-
-			if (newNbrPastries > 0) {
-				updatePastries(newNbrPastries)
-					.then((response) => {
-						// Si la réponse contient les pâtisseries gagnées
-						if (response.data && response.data.length > 0) {
-							resultMsg.classList.add("win");
-							const newP = document.createElement("p");
-							newP.innerText = "Bravo, Vous avez gagné : ";
-							resultMsg.appendChild(newP);
-
-							const newUl = document.createElement("ul");
-							response.data.forEach((p) => {
-								const newLi = document.createElement("li");
-								newLi.innerText = `${p.name}`; // Ajouter le nom de la pâtisserie
-								newUl.appendChild(newLi);
-							});
-							resultMsg.appendChild(newUl);
-						} else {
-							resultMsg.innerText = `Vous avez gagné ${newNbrPastries} pâtisseries !`;
-						}
-					})
-					.catch((error) => {
-						console.error("Erreur de mise à jour :", error);
-						resultMsg.innerText =
-							"Une erreur est survenue lors de la mise à jour.";
-					});
+			if (keptDie) {
+				dices.appendChild(keptDie);
+				result.push(Number(keptDie.dataset.value));
 			} else {
-				resultMsg.innerText = "Aucune combinaison gagnante. Essayez encore !";
+				const randomValue = Math.floor(Math.random() * 6) + 1;
+				result.push(randomValue);
+
+				const img = document.createElement("img");
+				img.src = `/dice/dice${randomValue}.png`;
+				img.alt = dieLabel;
+				img.dataset.value = randomValue;
+				img.addEventListener("click", () => keepDie(i));
+				dices.appendChild(img);
 			}
 		}
 
-		setNbrPastries(newNbrPastries);
+		setNbrLancer((prev) => prev - 1);
+		if (nbrLancer === 1) checkCombination(result);
 	};
+
+	// Fonction pour terminer la partie
+	const endGame = () => {
+		const dices = zoneDiceRef.current.querySelectorAll("img");
+		const result = Array.from(dices).map((dice) => Number(dice.dataset.value));
+		checkCombination(result);
+	};
+
+	// useEffect(() => {
+	// 	const checkMidnightClear = () => {
+	// 		const currentDate = new Date();
+	// 		const currentDay = currentDate.toISOString().split("T")[0]; // Format YYYY-MM-DD
+
+	// 		// Vérifie la dernière date de nettoyage dans localStorage
+	// 		const lastClearDate = localStorage.getItem("lastClearDate");
+
+	// 		// Si la date du dernier nettoyage est différente de la date actuelle, on vide le localStorage
+	// 		if (lastClearDate !== currentDay) {
+	// 			// Vider le localStorage
+	// 			localStorage.clear();
+
+	// 			// Mettre à jour la date de dernier nettoyage
+	// 			localStorage.setItem("lastClearDate", currentDay);
+	// 		}
+	// 	};
+
+	// 	// Vérifier le nettoyage à chaque démarrage de l'application
+	// 	checkMidnightClear();
+
+	// 	// Récupérer 'played' depuis localStorage et le convertir en booléen
+	// 	const played = localStorage.getItem("played") === "true";
+	// 	if (played === true) {
+	// 		setIsDisabled(true);
+	// 	}
+	// }, []);
 
 	return (
 		<div className="page" id="Jouer">
@@ -110,20 +178,24 @@ const JouerPage = () => {
 				Accumulez les délices pour remporter la partie !.
 			</p>
 
-			<div className="zoneDice">
-				<img src={`/dice/dice0.png`} alt="?" />
-				<img src={`/dice/dice0.png`} alt="?" />
-				<img src={`/dice/dice0.png`} alt="?" />
-				<img src={`/dice/dice0.png`} alt="?" />
-				<img src={`/dice/dice0.png`} alt="?" />
+			<div className="zoneDice" ref={zoneDiceRef}>
+				{Array(5)
+					.fill(0)
+					.map((_, i) => (
+						<img key={i} src={`/dice/dice0.png`} alt="?" />
+					))}
 			</div>
 
-			<div id="resultMsg"></div>
+			<div id="resultMsg">{resultMsg}</div>
 
 			<button onClick={throwDice} disabled={isDisabled}>
 				{isDisabled
-					? "Vous n'avez plus de d'essais"
-					: `Lancer les dés (${nbrLancer} Lancer restant)`}
+					? "Vous n'avez plus d'essais"
+					: `Lancer les dés (${nbrLancer} restants)`}
+			</button>
+
+			<button onClick={endGame} disabled={isDisabled}>
+				Terminer la partie
 			</button>
 		</div>
 	);

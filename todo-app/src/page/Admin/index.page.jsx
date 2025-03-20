@@ -3,11 +3,12 @@ import { useGetPastriesQuery } from "../../store/slice/apiSlice.js";
 import { useCheckLoginQuery } from "../../store/slice/userSlice.js"; // Vérifier la connexion
 import PastrieList from "../../component/pastrieList/index.jsx";
 import StyledLink from "../../component/StyledLink/index.jsx";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AdminPage = () => {
 	const navigate = useNavigate();
+	const [filter, setFilterValue] = useState("");
 
 	// Vérification de la connexion utilisateur
 	const { isError } = useCheckLoginQuery();
@@ -52,17 +53,41 @@ const AdminPage = () => {
 					</div>
 				</div>
 				{pastries.map((pastrie) => (
-					<PastrieList key={pastrie.id} pastrie={pastrie} refetch={refetch} />
+					<PastrieList
+						key={pastrie.id}
+						pastrie={pastrie}
+						refetch={refetch}
+						filter={filter}
+					/>
 				))}
 			</div>
 		);
 	}
+
+	const filtering = (e) => {
+		const newFilter = e.target.value.toLowerCase();
+
+		if (newFilter.length >= 3) {
+			setFilterValue(newFilter);
+		} else {
+			setFilterValue("");
+		}
+	};
 
 	return (
 		<div className="page" id="Admin">
 			<h2>Administration</h2>
 			<h3>Liste des pâtisseries</h3>
 			<StyledLink to="/newPastrie">Ajouter une pâtisserie</StyledLink>
+
+			<div className="filter">
+				<input
+					type="text"
+					id="filter"
+					onChange={filtering}
+					placeholder="filtre"
+				/>
+			</div>
 			{content}
 		</div>
 	);
